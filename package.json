@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Whatspp Bot using WhatsApp Cloud API",
   "author": "",
-  "private": true,
   "license": "UNLICENSED",
   "main": "dist/index",
   "types": "dist/index",

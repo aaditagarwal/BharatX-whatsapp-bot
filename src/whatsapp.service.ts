@@ -43,7 +43,7 @@ export class WhatsappService {
         };
 
         try{
-            const apiResponse = await axios.post(
+            await axios.post(
                 `https://graph.facebook.com/v16.0/${this.initInput.businessPhoneNumber}/messages`,
                 JSON.stringify(message),
                 {headers: {
@@ -52,7 +52,6 @@ export class WhatsappService {
                     'X-Waba-Id': this.initInput.wabaId
                 }}
             );
-            console.log({apiResponse});
         } catch(err) {
             throw err;
         }
@@ -62,19 +61,20 @@ export class WhatsappService {
     private parseTemplateVariables(
         templateVariables: Object | string[],
     ): any {
-        var templateComponentsObj = {}; 
-        Array.isArray(templateVariables)
-            ? templateComponentsObj = {
-                'type': templateVariables[0],
-                'currency': templateVariables[1],
-                'date_time': templateVariables[2],
-                'text': templateVariables[3]
-            }
-            : Object.keys(templateVariables).forEach(keyValue => {
-                if( keyValue==='currency' || keyValue==='date_time' || keyValue==='text' || keyValue==='type' ){
-                    templateComponentsObj[keyValue] = templateVariables[keyValue];
-                }
+        var templateComponentsObj = [{
+            'type': 'body',
+            'parameters':[]
+        }]; 
+        if(Array.isArray(templateVariables)){
+            templateVariables.forEach(variable => {
+                templateComponentsObj['parameters'].push({
+                    "type": "text",
+                    "text": variable
+                });
             });
+        } else {
+            templateComponentsObj['parameters'].push(templateVariables);
+        }
         return templateComponentsObj;
     }
 
