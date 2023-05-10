@@ -1,19 +1,23 @@
 import { Injectable } from "@nestjs/common";
 import axios from 'axios';
 
+interface initInputObject {
+    authorizationToken: string;
+    wabaId: string;
+    businessPhoneNumber: string;
+}
+
 @Injectable()
 export class WhatsappService {
 
+    private initInput: initInputObject
     constructor(
-        private authorizationToken: string,
-        private wabaId: string,
-        private businessPhoneNumber: string,
-    ) {}
-
-    init(authorizationToken, wabaId, businessPhoneNumber): void {
-        this.authorizationToken = authorizationToken;
-        this.wabaId = wabaId;
-        this.businessPhoneNumber = businessPhoneNumber;
+        input: initInputObject
+    ) {
+        this.initInput = Object.assign(
+            {},
+            input
+        );
     }
 
     async sendMessage(
@@ -40,12 +44,12 @@ export class WhatsappService {
 
         try{
             const apiResponse = await axios.post(
-                `https://graph.facebook.com/v16.0/${this.businessPhoneNumber}/messages`,
+                `https://graph.facebook.com/v16.0/${this.initInput.businessPhoneNumber}/messages`,
                 JSON.stringify(message),
                 {headers: {
-                    Authorization: `Bearer ${this.authorizationToken}`,
+                    Authorization: `Bearer ${this.initInput.authorizationToken}`,
                     'Content-Type': 'application/json',
-                    'X-Waba-Id': this.wabaId
+                    'X-Waba-Id': this.initInput.wabaId
                 }}
             );
             console.log({apiResponse});
