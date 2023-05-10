@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config/dist";
 import { ApiService } from "../api/api.service";
 
 @Injectable()
 export class WhatsappService {
 
     constructor(
-        private readonly configService: ConfigService,
         private readonly apiService: ApiService,
-        private readonly authorizationToken: string,
-        private readonly wabaId: string,
-        private readonly businessPhoneNumber: string,
-    ) {
-        this.authorizationToken = this.configService.get<string>('AUTH_TOKEN');
-        this.wabaId = this.configService.get<string>('WABAID');
-        this.businessPhoneNumber = this.configService.get<string>('B_PHONE_NUMBER');
+        private authorizationToken: string,
+        private wabaId: string,
+        private businessPhoneNumber: string,
+    ) {}
+
+    init(authorizationToken, wabaId, businessPhoneNumber): void {
+        this.authorizationToken = authorizationToken;
+        this.wabaId = wabaId;
+        this.businessPhoneNumber = businessPhoneNumber;
     }
 
     async sendMessage(
